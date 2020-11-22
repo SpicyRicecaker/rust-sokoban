@@ -1,6 +1,6 @@
 // Import our module
-#[path = "learn/twelve_days.rs"] mod twelve_days;
+#[path = "self/string.rs"] mod string;
 fn main() {
     // Run it!
-    twelve_days::sing();
+    string::test();
 }
