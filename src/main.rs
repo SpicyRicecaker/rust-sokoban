@@ -1,6 +1,7 @@
 // Import our module
-#[path = "self/string.rs"] mod string;
+mod learn;
+use learn::avg_mean_mode;
 fn main() {
     // Run it!
-    string::test();
+    avg_mean_mode::avg_mean_mode();
 }
