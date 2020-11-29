@@ -1,10 +1,10 @@
 // Import our module
 mod learn;
 // mod own;
-use learn::pig_latin;
+use learn::company;
 // use own::length_expensive;
 fn main() {
     // Run it!
-    pig_latin::pig_latin();
+    company::company();
     // length_expensive::length_expensive();
 }
