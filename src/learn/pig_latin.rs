@@ -16,6 +16,19 @@ use std::io;
 //
 // always format!("{} {}", string1, string2)
 
+use std::time::SystemTime;
+
+fn took(msg: &str, start: SystemTime) {
+    match start.elapsed() {
+        Ok(elapsed) => {
+            println!("{} took {} ms", msg, elapsed.as_micros())
+        }
+        Err(e) => {
+            println!("Error: {:?}", e)
+        }
+    }
+}
+
 const VOWELS: [u8; 5] = [b'a', b'e', b'i', b'o', b'u'];
 
 pub fn pig_latin() {
@@ -59,31 +72,18 @@ fn split_by_space(input: String) -> String {
 // If consonant, find cluster, move to back, add -ay
 // If vowel, just add "yay" or "ay" to the end of the word
 fn to_pig_latin(word: &str) -> String {
-    let mut word = String::from(word);
-    let mut pivot = 0;
     if word.len() != 0 {
-        let mut buffer = String::new();
         // First check if first is a vowel
         for (i, character) in word.bytes().enumerate() {
             if VOWELS.iter().any(|&x| x == character.to_ascii_lowercase()) {
                 if i == 0 {
-                    word.push_str("yay");
-                    return word;
+                    return String::from(word) + "yay";
                 }
-                pivot = i;
-                break;
+                return format!("{}{}ay", &word[i..], &word[..i]);
             }
         }
-        if pivot != 0 {
-            // push to buffer
-            // Slice from i to length
-            buffer = format!("{}{}ay", &word[pivot..], &word[..pivot]);
-            buffer
-        } else {
-            buffer = format!("{}{}ay", &word[1..], &word[..1]);
-            buffer
-        }
+        return format!("{}{}ay", &word[1..], &word[..1]);
     } else {
-        word
+        String::from(word)
     }
 }
