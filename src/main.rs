@@ -1,7 +1,10 @@
 // Import our module
 mod learn;
-use learn::avg_mean_mode;
+// mod own;
+use learn::pig_latin;
+// use own::length_expensive;
 fn main() {
     // Run it!
-    avg_mean_mode::avg_mean_mode();
+    pig_latin::pig_latin();
+    // length_expensive::length_expensive();
 }
