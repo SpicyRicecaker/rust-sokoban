@@ -1,10 +1,10 @@
 // Import our module
 mod learn;
 // mod own;
-use learn::company;
+use learn::error;
 // use own::length_expensive;
 fn main() {
     // Run it!
-    company::company();
+    error::error();
     // length_expensive::length_expensive();
 }
