@@ -1,4 +1,3 @@
-// Import our module
 mod learn;
 // mod own;
 use learn::error;
