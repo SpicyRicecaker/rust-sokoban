@@ -1,0 +1,16 @@
+[package]
+name = "misc"
+version = "0.1.0"
+authors = ["SpicyRicecaker <awesomenessisgolden@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+# Can use these below to change default optimization settings
+# [profile.dev]
+# opt-level = 0
+
+# [profile.release]
+# opt-level = 3   

@@ -10,47 +10,43 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Self, &'static str> {
-        if args.len() < 3 {
-            return Err("Please provide at least two arguments");
-        }
-        let query = &args[1];
-        let filename = &args[2];
+    pub fn new(mut args: env::Args) -> Result<Self, &'static str> {
+        // Ignore first param, which is just the executable
+        args.next();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
 
-        let mut options = None;
-        if args.len() >= 4 {
-            options = Some(&args[3..]);
-        }
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
 
         let mut case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
-        if let Some(i) = options {
-            for option in i {
-                match option.as_str() {
-                    "-h" => {
-                        println!("-i for case insensitive, -h to print this message again.");
-                        process::exit(0);
-                    }
-                    "-i" => {
-                        case_sensitive = false
-                    }
-                    _ => {
-                        println!(
-                            "`{}` is not a known flag, try -h to search for commands.",
-                            option
-                        )
-                    }
+        // Iterate through remaining arguments as options
+        for option in args {
+            match option.as_str() {
+                "-h" => {
+                    println!("-i for case insensitive, -h to print this message again.");
+                    process::exit(0);
+                }
+                "-i" => case_sensitive = false,
+                _ => {
+                    println!(
+                        "`{}` is not a known flag, try -h to search for commands.",
+                        option
+                    )
                 }
             }
         }
 
-        let config = Config {
-            query: String::from(query),
-            filename: String::from(filename),
-            case_sensitive: case_sensitive,
-        };
-
-        Ok(config)
+        Ok(Config {
+            query,
+            filename,
+            case_sensitive,
+        })
     }
 }
 
@@ -75,27 +71,31 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     // Match query in line
     // If yes, return, keep going
     // Return nothign
-
-    let mut results: Vec<&str> = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line.trim());
-        }
-    }
-    results
+    // for line in contents.lines() {
+    //     if line.contains(query) {
+    //         results.push(line.trim());
+    //     }
+    // }
+    
+    contents
+        .lines()
+        .map(|line| line.trim())
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive_regex<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results: Vec<&str> = Vec::new();
+    // let mut results: Vec<&str> = Vec::new();
+    // for line in contents.lines() {
+    //     if reg_query.is_match(line) {
+    //         results.push(line.trim());
+    //     }
+    // }
+    // results
 
     // Compile search res insensitive
     let reg_query = Regex::new(&format!("(?i){}", query)).unwrap();
-    for line in contents.lines() {
-        if reg_query.is_match(line) {
-            results.push(line.trim());
-        }
-    }
-    results
+    contents.lines().map(|line| line.trim()).filter(|line| reg_query.is_match(line)).collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {

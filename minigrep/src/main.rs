@@ -4,9 +4,11 @@ use std::process;
 use minigrep::Config;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    // let args: Vec<String> = env::args().collect();
 
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    // Instead of creating a vector of strings and a reference to it, we can just pass
+    // the entire iterator instead
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         eprintln!("{}", err);
         process::exit(1);
     });
